@@ -1,9 +1,10 @@
 import './App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import Expenses from './components/Expenses/Expenses';
+import NewExpense from './components/newExpenses/NewExpense'
 
 function App() {
-  const expenses = [
+  const deafultExpenses = [
     {
       id: 'e1',
       title: 'Toilet Paper',
@@ -24,10 +25,27 @@ function App() {
       date: new Date(2021, 5, 12),
     },
   ];
+
+  const [expenses, setExpenses] = useState(deafultExpenses);
+  const [filter, setFilterValue] = useState('');
+
+  const addExpenseHandler = (expenseData) => {
+
+    setExpenses((prevState) => [...prevState, expenseData]);
+  }
+
+  const onFilterChange = (value) => {
+    setFilterValue((prevState) => {
+      const filterExpense = expenses.filter((expense) => expense.date.getFullYear().toString() === value);
+      setExpenses((prevState) => filterExpense);
+    });
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <Expenses expenses={expenses}></Expenses>
+        <NewExpense addExpenseHandler={addExpenseHandler}></NewExpense>
+        <Expenses expenses={expenses} onFilterChange={onFilterChange} selectedValue={filter}></Expenses>
       </header>
     </div>
   );
